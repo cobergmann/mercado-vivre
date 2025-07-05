@@ -2,17 +2,20 @@ const express = require("express");
 const router = express.Router();
 const { query } = require("../db/index.js");
 
+// Get products
 router.get("/", async (req, res) => {
   const { category, price_min, price_max } = req.query;
 
   try {
     let result;
 
+    // Get products by category
     if (category) {
       result = await query(
         "SELECT * FROM products WHERE category ILIKE $1 ORDER BY created_at DESC",
         [category]
       );
+      // Get products by price
     } else if (price_min && price_max) {
       const priceMin = Number(price_min);
       const priceMax = Number(price_max);
@@ -35,11 +38,13 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Get products by ID
 router.get("/:id", async (req, res) => {
   const id = req.params.id;
   try {
     const result = await query("SELECT * FROM products WHERE id = $1", [id]);
 
+    // ID not found
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "Product not found" });
     }

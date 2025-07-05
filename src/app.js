@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
-const productsRouter = require("./routes/products.js");
+const productRouter = require("./routes/products.js");
+const userRouter = require("./routes/users.js");
 
 app.use(express.json());
 
@@ -9,6 +10,7 @@ app.get("/ping", (req, res) => {
   res.json({ message: "pong" });
 });
 
-app.use("/products", productsRouter);
+app.use("/products", productRouter);
+app.use("/users", userRouter);
 
 module.exports = app;
