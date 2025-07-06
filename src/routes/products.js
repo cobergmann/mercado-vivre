@@ -31,7 +31,7 @@ router.get("/", async (req, res) => {
       result = await query("SELECT * FROM products ORDER BY created_at DESC");
     }
 
-    res.json(result.rows);
+    res.status(200).json(result.rows);
   } catch (err) {
     console.error("Error fetching products:", err);
     res.status(500).json({ error: "Internal server error" });
@@ -49,7 +49,7 @@ router.get("/:id", async (req, res) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    res.json(result.rows);
+    res.status(200).json(result.rows);
   } catch (err) {
     console.error("Error fetching product by ID:", err);
     res.status(500).json({ error: "Internal server error" });
