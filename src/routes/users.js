@@ -2,13 +2,15 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const { query } = require("../db/index.js");
+const passport = require("passport");
 
+// User registration
 router.post("/register", async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
   // Input validation
   if (!email || !password) {
-    res.status(400).json({ error: "Email and password are required" });
+    return res.status(400).json({ error: "Email and password are required" });
   }
 
   try {
@@ -33,6 +35,34 @@ router.post("/register", async (req, res) => {
     console.error("Registration error:", err);
     res.status(500).json({ error: "Internal server error" });
   }
+});
+
+// User login
+router.post("/login", (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return res.status(400).json({ message: "User already logged in" });
+  }
+
+  passport.authenticate("local", (err, user, info) => {
+    if (err) return next(err);
+    if (!user)
+      return res.status(401).json({ error: info.message || "Unauthorized" });
+    req.logIn(user, (err) => {
+      if (err) return next(err);
+      return res.status(200).json({ message: "Login successful" });
+    });
+  })(req, res, next);
+});
+
+// User logout
+router.post("/logout", (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(400).json({ error: "No user logged in" });
+  }
+  req.logout((err) => {
+    if (err) return res.status(500).json({ error: "Logout not successful" });
+    res.status(200).json({ message: "Log out successful" });
+  });
 });
 
 module.exports = router;
