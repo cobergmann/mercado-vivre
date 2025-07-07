@@ -6,6 +6,7 @@ const passport = require("passport");
 const initializePassport = require("./auth/passportConfig.js");
 const session = require("express-session");
 require("dotenv").config();
+const cartRouter = require("./routes/carts.js");
 
 initializePassport(passport);
 
@@ -26,5 +27,6 @@ app.use(passport.session());
 
 app.use("/products", productRouter);
 app.use("/users", userRouter);
+app.use("/items", cartRouter);
 
 module.exports = app;

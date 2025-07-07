@@ -3,7 +3,10 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const { query } = require("../db/index.js");
 const passport = require("passport");
-const ensureAuthenticatedUser = require("../middleware/auth.js");
+const {
+  ensureAuthenticatedUser,
+  ensureSameUser,
+} = require("../middleware/auth.js");
 
 // User registration
 router.post("/register", async (req, res) => {
@@ -78,7 +81,7 @@ router.get("/", async (req, res) => {
 });
 
 // Get user information
-router.get("/:id", ensureAuthenticatedUser, async (req, res, next) => {
+router.get("/:id", ensureSameUser, async (req, res, next) => {
   const userId = req.params.id;
 
   try {
@@ -95,7 +98,7 @@ router.get("/:id", ensureAuthenticatedUser, async (req, res, next) => {
 });
 
 // Update user information
-router.put("/:id", ensureAuthenticatedUser, async (req, res) => {
+router.put("/:id", ensureSameUser, async (req, res) => {
   const userId = req.params.id;
   const { first_name, last_name, email } = req.body;
 
