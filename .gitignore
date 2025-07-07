@@ -1,6 +1,9 @@
 # Environment variables
 .env
 
+# Node modules
+node_modules/
+
 # Personal
 playground.js
-node_modules/
+20250702_api_plan.numbers
